@@ -17,7 +17,6 @@ import {
   CustomModal,
   EmpetyPage,
   FloatingButton,
-  Gap,
   Header,
   ListItem,
 } from '../components';
