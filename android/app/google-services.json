@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1051865489057",
+    "firebase_url": "https://uasgamemi.firebaseio.com",
+    "project_id": "uasgamemi",
+    "storage_bucket": "uasgamemi.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1051865489057:android:9764ae7506803480d61ae0",
+        "android_client_info": {
+          "package_name": "com.huda.todolist"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1051865489057-3kckbqj93aurpe9701rvs1e88qkqlsnj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBjWPWDdFOx69ONg8Ho7XLHM2sr8Pah58M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1051865489057-3kckbqj93aurpe9701rvs1e88qkqlsnj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
