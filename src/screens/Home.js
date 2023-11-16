@@ -2,25 +2,69 @@
 /* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, {useEffect} from 'react';
-import { View, FlatList, Dimensions, TouchableOpacity, StyleSheet } from 'react-native';
-import { stylesheets } from '../assets';
-import { colorApp, textApp } from '../utils/GlobalVariable';
-import { CustomModal, EmpetyPage, FloatingButton, Header, ListItem } from '../components';
+import {
+  View,
+  FlatList,
+  Dimensions,
+  TouchableOpacity,
+  StyleSheet,
+  BackHandler,
+  Text,
+} from 'react-native';
+import {stylesheets} from '../assets';
+import {colorApp, textApp} from '../utils/GlobalVariable';
+import {
+  CustomModal,
+  EmpetyPage,
+  FloatingButton,
+  Gap,
+  Header,
+  ListItem,
+} from '../components';
 import {useDispatch, useSelector} from 'react-redux';
-import { deleteTodo, getTodo, setLoading, setModal, setTypeModal } from '../redux/todo/todoSlice';
+import {
+  deleteTodo,
+  getTodo,
+  setLoading,
+  setModal,
+  setTypeModal,
+} from '../redux/todo/todoSlice';
 import Feather from 'react-native-vector-icons/Feather';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { FlashMessageManager } from '../utils/FlashMessageManager';
-const { width, height } = Dimensions.get('window');
-const Home = ({ navigation }) => {
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import {FlashMessageManager} from '../utils/FlashMessageManager';
+
+const {width, height} = Dimensions.get('window');
+const Home = ({navigation}) => {
   const dispatch = useDispatch();
-  const {listTodo, isLoading, message, modal, typeModal} = useSelector(state => state.todo);
+  const {listTodo, isLoading, message, modal, typeModal} = useSelector(
+    state => state.todo,
+  );
   useEffect(() => {
+    const backAction = () => {
+      if (navigation.isFocused()) {
+        openModalAction(
+          'confrim',
+          'Warning',
+          'Are you sure you will get out the application?',
+          '',
+        );
+        return true;
+      }
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction,
+    );
+
     const unsubscribe = navigation.addListener('focus', () => {
       dispatch(getTodo());
     });
-    return unsubscribe;
+    return () => {
+      backHandler.remove();
+      unsubscribe;
+    };
   }, [dispatch]);
   const deleteItem = async params => {
     console.log(params);
@@ -41,16 +85,16 @@ const Home = ({ navigation }) => {
   };
 
   const openModalAction = (type, vtitle, vdata, action) => {
-      const dataModalTemp = {
-          type: type,
-          title: vtitle,
-          data: vdata,
-          action: action,
-      };
-      dispatch(setTypeModal(dataModalTemp));
-      setTimeout(() => {
-        dispatch(setModal(true));
-      }, 500);
+    const dataModalTemp = {
+      type: type,
+      title: vtitle,
+      data: vdata,
+      action: action,
+    };
+    dispatch(setTypeModal(dataModalTemp));
+    setTimeout(() => {
+      dispatch(setModal(true));
+    }, 500);
   };
 
   const renderListTodoList = item => {
@@ -94,6 +138,11 @@ const Home = ({ navigation }) => {
           <FlatList
             showsVerticalScrollIndicator={false}
             data={listTodo}
+            ListHeaderComponent={() => (
+              <Text style={stylesheets.title('red', 14)}>
+                *right swipe action to delete item
+              </Text>
+            )}
             renderItem={({item}) => renderListTodoList(item)}
             keyExtractor={item => item.id}
             ItemSeparatorComponent={() => Separator()}
@@ -116,7 +165,7 @@ const Home = ({ navigation }) => {
           console.log(vdata);
           if (status) {
             dispatch(setModal(false));
-            deleteItem(vdata);
+            vdata !== '' ? deleteItem(vdata) : BackHandler.exitApp();
           } else {
             dispatch(setModal(false));
           }
